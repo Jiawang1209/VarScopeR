@@ -1,4 +1,3 @@
-
 FindVariableFeatures <- function(mat, group){
 
   # check input
