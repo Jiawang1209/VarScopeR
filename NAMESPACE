@@ -2,4 +2,5 @@
 
 S3method(print,VarScope)
 export("%>%")
+export(CreateVarScopeObject)
 importFrom(magrittr,"%>%")
