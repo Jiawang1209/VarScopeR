@@ -3,4 +3,6 @@
 S3method(print,VarScope)
 export("%>%")
 export(CreateVarScopeObject)
+export(FindVariableFeatures)
+export(NormalizeData)
 importFrom(magrittr,"%>%")
