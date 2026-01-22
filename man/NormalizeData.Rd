@@ -10,36 +10,36 @@ NormalizeData(
   new.assay = "norm",
   normalization.method = c("none", "log2", "log10", "ln", "rrarefy", "rrarefy_relative",
     "clr"),
-  seed = 1115
+  seed = 1115,
+  verbose = TRUE
 )
 }
 \arguments{
-\item{object}{A \code{VarScope} object
-containing raw feature abundance data .}
+\item{object}{A \code{VarScope} object containing raw feature abundance data.}
 
-\item{assay}{Character.
-Name of the input assay to be normalized}
+\item{assay}{Character. Name of the input assay to be normalized (default: "raw").}
 
-\item{new.assay}{Character.
-Name of the normalized data}
+\item{new.assay}{Character. Name of the normalized data assay (default: "norm").}
 
-\item{normalization.method}{Character.
-Data transformation methods applied before correlation analysis.
-Options include:
-"none" (raw data),
-"scale" (z-score standardization),
-"center" (mean centering only),
-"log2" (log2 transfrom),
-"log10" (log10 transfrom),
-"ln" (natural transfrom ),
-"rrarefy" (random rarefaction using \code{vegan::rrarefy}),
-"rrarefy_relative" (rarefy then convert to relative abundance).}
+\item{normalization.method}{Character. Data transformation method. Options include:
+\itemize{
+  \item \code{"none"}: No transformation (raw data)
+  \item \code{"log2"}: Log2 transformation (log2(x + 1))
+  \item \code{"log10"}: Log10 transformation (log10(x + 1))
+  \item \code{"ln"}: Natural logarithm (log(x + 1))
+  \item \code{"rrarefy"}: Random rarefaction to minimum sample depth
+    (using \code{vegan::rrarefy})
+  \item \code{"rrarefy_relative"}: Rarefaction followed by relative abundance
+  \item \code{"clr"}: Centered log-ratio transformation
+}}
 
-\item{seed}{Integer (default = 1115).
-Random seed for reproducibility.}
+\item{seed}{Integer. Random seed for reproducibility (default: 1115).}
+
+\item{verbose}{Logical. Whether to print progress messages (default: TRUE).}
 }
 \value{
-A \code{VarScope} object containing the normalized data,
+A \code{VarScope} object with normalized data stored in
+  \code{object$assays[[new.assay]]}.
 }
 \description{
 Normalize raw feature abundance data (e.g. OTU/ASV tables) stored in a
@@ -47,5 +47,19 @@ Normalize raw feature abundance data (e.g. OTU/ASV tables) stored in a
 within the object, while the original data remain unchanged.
 }
 \examples{
-NULL
+\dontrun{
+vsobj <- CreateVarScopeObject(
+  counts = "inst/extdata/otutab.txt",
+  meta.data = "inst/extdata/group.csv"
+)
+
+# Log2 transformation
+vsobj <- NormalizeData(vsobj, normalization.method = "log2")
+
+# CLR transformation
+vsobj <- NormalizeData(vsobj, normalization.method = "clr", new.assay = "clr")
+
+# Rarefaction
+vsobj <- NormalizeData(vsobj, normalization.method = "rrarefy")
+}
 }

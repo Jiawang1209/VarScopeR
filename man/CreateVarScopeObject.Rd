@@ -14,19 +14,29 @@ CreateVarScopeObject(
 )
 }
 \arguments{
-\item{counts}{Character
-The path to a feature table}
+\item{counts}{Character, matrix, or data.frame. Path to a feature table file, or a matrix/data.frame
+with features as rows and samples as columns.}
 
-\item{meta.data}{Character}
+\item{meta.data}{Character, or data.frame. Path to a metadata file, or a data.frame containing
+sample metadata. Must contain columns: \code{Sample} and \code{Group}.}
 
-\item{project}{Character}
+\item{project}{Character. Project name for the VarScope object (optional).}
 
-\item{min.group}{Numeric}
+\item{min.group}{Numeric. Minimum number of samples per group. Groups with fewer samples will
+be removed (default: 0, no filtering).}
 
-\item{min.features}{Numeric}
+\item{min.features}{Numeric. Minimum number of features (non-zero counts) per sample. Samples
+with fewer features will be removed (default: 0, no filtering).}
+
+\item{...}{Additional arguments passed to \code{read_counts_and_meta} when reading from files.}
 }
 \value{
-A \code{VarScope} object containing raw feature counts, sample metadata,
+A \code{VarScope} object containing:
+  \itemize{
+    \item \code{assays$raw}: Raw feature count matrix
+    \item \code{meta$sample}: Sample metadata
+    \item \code{params}: Parameters used in object creation
+  }
 }
 \description{
 Create a \code{VarScope} object from an ASV/feature table and corresponding sample metadata.
@@ -34,10 +44,27 @@ This function initializes the core container used throughout the VarScopeR workf
 }
 \examples{
 \dontrun{
+# From file paths
 vsobj <- CreateVarScopeObject(
   counts = "inst/extdata/otutab.txt",
   meta.data = "inst/extdata/group.csv",
   project = "ExampleProject"
+)
+
+# From R objects
+counts_matrix <- matrix(rpois(1000, 10), nrow = 100, ncol = 10)
+rownames(counts_matrix) <- paste0("ASV_", 1:100)
+colnames(counts_matrix) <- paste0("Sample_", 1:10)
+
+meta_df <- data.frame(
+  Sample = paste0("Sample_", 1:10),
+  Group = rep(c("Control", "Treatment"), each = 5)
+)
+
+vsobj <- CreateVarScopeObject(
+  counts = counts_matrix,
+  meta.data = meta_df,
+  project = "MyProject"
 )
 
 vsobj

@@ -1,7 +1,7 @@
 Package: VarScopeR
 Type: Package
 Title: VarScopeR is an R package for identifying perturbation-driven feature modules by decomposing within- and between-group variance.
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(
     person(
       "Yue", "Liu",
@@ -18,4 +18,5 @@ RoxygenNote: 7.3.3
 Imports: 
     magrittr,
     readxl,
+    uwot,
     vegan

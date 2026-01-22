@@ -9,27 +9,35 @@ FindVariableFeatures(
   assay = "norm",
   var_within_cutoff = 0.4,
   var_between_cutoff = 0.5,
-  seed = 1115
+  seed = 1115,
+  verbose = TRUE
 )
 }
 \arguments{
-\item{object}{A \code{VarScope} object
-containing normalized feature abundance data .}
+\item{object}{A \code{VarScope} object containing normalized feature abundance data.}
 
-\item{assay}{Character.
-Name of the assay to use for variable feature detection.}
+\item{assay}{Character. Name of the assay to use for variable feature detection
+(default: "norm").}
 
-\item{var_within_cutoff}{Numeric.
-the quantile threshold for within-group variance.}
+\item{var_within_cutoff}{Numeric. Quantile threshold for within-group variance.
+Features with within-group variance below this quantile are retained
+(default: 0.4, i.e., bottom 40%).}
 
-\item{var_between_cutoff}{Numeric.
-Lower threshold for between-group variance.}
+\item{var_between_cutoff}{Numeric. Lower threshold for between-group variance
+proportion (eta2_between). Features with eta2_between >= this value are
+retained (default: 0.5).}
 
-\item{seed}{Integer (default = 1115).
-Random seed for reproducibility.}
+\item{seed}{Integer. Random seed for reproducibility (default: 1115).}
+
+\item{verbose}{Logical. Whether to print progress messages (default: TRUE).}
 }
 \value{
-A \code{VarScope} object containing the variable feature data,
+A \code{VarScope} object with variable feature information stored in:
+  \itemize{
+    \item \code{object$features$stats}: Statistics for all features
+    \item \code{object$features$stats_filter}: Filtered variable features
+    \item \code{object$features$variable}: Character vector of variable feature names
+  }
 }
 \description{
 Identify perturbation-driven variable features by decomposing feature-wise
@@ -38,5 +46,20 @@ low within-group variability and high between-group variability are retained
 as variable features.
 }
 \examples{
-NULL
+\dontrun{
+vsobj <- CreateVarScopeObject(
+  counts = "inst/extdata/otutab.txt",
+  meta.data = "inst/extdata/group.csv"
+)
+vsobj <- NormalizeData(vsobj, normalization.method = "log2")
+vsobj <- FindVariableFeatures(
+  vsobj,
+  var_within_cutoff = 0.4,
+  var_between_cutoff = 0.5
+)
+# Access variable features
+variable_features <- vsobj$features$variable
+# View statistics
+head(vsobj$features$stats_filter)
+}
 }
