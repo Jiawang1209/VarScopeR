@@ -6,10 +6,7 @@ VarScopeR is an R package for identifying perturbation-driven feature modules by
 
 ```r
 # Install from source (development version)
-devtools::install_github("yourusername/VarScopeR")
-
-# Or install from local source
-devtools::install("path/to/VarScopeR")
+devtools::install_github("Jiawang1209/VarScopeR")
 ```
 
 ## Dependencies
